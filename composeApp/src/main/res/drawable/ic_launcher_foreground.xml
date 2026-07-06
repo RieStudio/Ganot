@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Scale and pivot group to adjust size proportionally inside the 108dp space -->
+    <group 
+        android:name="scaled_logo"
+        android:scaleX="0.65"
+        android:scaleY="0.65"
+        android:pivotX="54.0"
+        android:pivotY="54.0">
+        
+        <!-- Outer Calendar Border (Stroke with Rounded Corners) -->
+        <path
+            android:pathData="M 30,32 L 78,32 A 8,8 0 0,1 86,40 L 86,78 A 8,8 0 0,1 78,86 L 30,86 A 8,8 0 0,1 22,78 L 22,40 A 8,8 0 0,1 30,32 Z"
+            android:strokeWidth="3.5"
+            android:strokeColor="#3B82F6"
+            android:strokeLineJoin="round"/>
+            
+        <!-- Top Hanging Rings (Vertical Caps) -->
+        <!-- Tab 1 -->
+        <path
+            android:pathData="M 32 23 L 32 32"
+            android:strokeWidth="3.5"
+            android:strokeColor="#3B82F6"
+            android:strokeLineCap="round"/>
+        <!-- Tab 2 -->
+        <path
+            android:pathData="M 46 23 L 46 32"
+            android:strokeWidth="3.5"
+            android:strokeColor="#3B82F6"
+            android:strokeLineCap="round"/>
+        <!-- Tab 3 -->
+        <path
+            android:pathData="M 61 23 L 61 32"
+            android:strokeWidth="3.5"
+            android:strokeColor="#3B82F6"
+            android:strokeLineCap="round"/>
+        <!-- Tab 4 -->
+        <path
+            android:pathData="M 75 23 L 75 32"
+            android:strokeWidth="3.5"
+            android:strokeColor="#3B82F6"
+            android:strokeLineCap="round"/>
+
+        <!-- Calendar Grid Inner Lines -->
+        <!-- Horizontal Top Banner Line at Y=44 -->
+        <path
+            android:pathData="M 22 44 L 86 44"
+            android:strokeWidth="2.5"
+            android:strokeColor="#4D3B82F6"/>
+
+        <!-- Vertical Grid Lines (lower opacity blue `#4D3B82F6` or 30% alpha) -->
+        <path
+            android:pathData="M 35 44 L 35 86 M 48 44 L 48 86 M 61 44 L 61 86 M 74 44 L 74 86"
+            android:strokeWidth="1.5"
+            android:strokeColor="#4D3B82F6"/>
+
+        <!-- Horizontal Grid Lines -->
+        <path
+            android:pathData="M 22 55 L 86 55 M 22 66 L 86 66 M 22 77 L 86 77"
+            android:strokeWidth="1.5"
+            android:strokeColor="#4D3B82F6"/>
+
+        <!-- Thick Rising Trendline Overlaid on Top (Hero Asset) -->
+        <path
+            android:pathData="M 27 75 L 39 57 L 52 62 L 65 44 L 77 29"
+            android:strokeWidth="6.5"
+            android:strokeColor="#3B82F6"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"/>
+
+        <!-- Glowing points/dots on trendline joint nodes to add extra polish and futuristic feel -->
+        <!-- Node 1 Start -->
+        <path
+            android:pathData="M 27 75 A 1.5 1.5 0 1 1 26.9 75 Z"
+            android:fillColor="#FFFFFF"/>
+        <!-- Node 2 -->
+        <path
+            android:pathData="M 39 57 A 1.5 1.5 0 1 1 38.9 57 Z"
+            android:fillColor="#FFFFFF"/>
+        <!-- Node 3 -->
+        <path
+            android:pathData="M 52 62 A 1.5 1.5 0 1 1 51.9 62 Z"
+            android:fillColor="#FFFFFF"/>
+        <!-- Node 4 -->
+        <path
+            android:pathData="M 65 44 A 1.5 1.5 0 1 1 64.9 44 Z"
+            android:fillColor="#FFFFFF"/>
+        <!-- Node 5 End -->
+        <path
+            android:pathData="M 77 29 A 1.5 1.5 0 1 1 76.9 29 Z"
+            android:fillColor="#FFFFFF"/>
+    </group>
+</vector>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@drawable/academic_widget_bg_light">
+
+    <!-- Header Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/widget_abs_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Kritik Devamsızlıklar"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="#1F2937"
+            android:letterSpacing="0.02" />
+
+        <TextView
+            android:id="@+id/widget_abs_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="1dp"
+            android:text="⚠️"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Empty State -->
+    <TextView
+        android:id="@+id/widget_abs_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Tehlikede olan bir ders bulunmuyor! 🎉"
+        android:textSize="11.5sp"
+        android:textColor="#6B7280"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <!-- List of Critical Classes (spacious and beautifully styled row cards) -->
+    <LinearLayout
+        android:id="@+id/widget_abs_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <!-- Slot 1 -->
+        <LinearLayout
+            android:id="@+id/abs_slot_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="7dp"
+            android:paddingHorizontal="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/academic_widget_slot_bg_light">
+            
+            <TextView
+                android:id="@+id/abs_slot_1_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:text="Ders Adı"
+                android:textSize="11.5sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#1F2937" />
+
+            <TextView
+                android:id="@+id/abs_slot_1_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="1 hak kaldı"
+                android:textSize="11sp"
+                android:gravity="end"
+                android:textStyle="bold"
+                android:textColor="#EF4444" />
+        </LinearLayout>
+
+        <!-- Slot 2 -->
+        <LinearLayout
+            android:id="@+id/abs_slot_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="7dp"
+            android:paddingHorizontal="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/academic_widget_slot_bg_light">
+            
+            <TextView
+                android:id="@+id/abs_slot_2_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:text="Ders Adı"
+                android:textSize="11.5sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#1F2937" />
+
+            <TextView
+                android:id="@+id/abs_slot_2_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="2 hak kaldı"
+                android:textSize="11sp"
+                android:gravity="end"
+                android:textStyle="bold"
+                android:textColor="#F59E0B" />
+        </LinearLayout>
+
+        <!-- Slot 3 -->
+        <LinearLayout
+            android:id="@+id/abs_slot_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="7dp"
+            android:paddingHorizontal="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/academic_widget_slot_bg_light">
+            
+            <TextView
+                android:id="@+id/abs_slot_3_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:text="Ders Adı"
+                android:textSize="11.5sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#1F2937" />
+
+            <TextView
+                android:id="@+id/abs_slot_3_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="3 hak kaldı"
+                android:textSize="11sp"
+                android:gravity="end"
+                android:textStyle="bold"
+                android:textColor="#10B981" />
+        </LinearLayout>
+
+        <!-- Slot 4 -->
+        <LinearLayout
+            android:id="@+id/abs_slot_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="7dp"
+            android:paddingHorizontal="10dp"
+            android:background="@drawable/academic_widget_slot_bg_light">
+            
+            <TextView
+                android:id="@+id/abs_slot_4_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:text="Ders Adı"
+                android:textSize="11.5sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#1F2937" />
+
+            <TextView
+                android:id="@+id/abs_slot_4_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="4 hak kaldı"
+                android:textSize="11sp"
+                android:gravity="end"
+                android:textStyle="bold"
+                android:textColor="#10B981" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
