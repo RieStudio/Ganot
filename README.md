@@ -51,13 +51,13 @@ Tamamen hızlı, sade ve dikkat dağıtmayan bir kullanıcı deneyimi sunmayı h
 
 # Özellikler
 
-- 🎓 Akıllı GANO hesaplama
-- 📅 Vize, final ve bütünleme takibi
-- 📊 Devamsızlık yönetimi
-- 📚 Ders planlama
-- 🔔 Akademik hatırlatıcılar
-- 🔒 Yerel ve güvenli veri saklama
-- ⚡ Hızlı ve minimalist arayüz
+-  Akıllı GANO hesaplama
+-  Vize, final ve bütünleme takibi
+-  Devamsızlık yönetimi
+-  Ders planlama
+-  Akademik hatırlatıcılar
+-  Yerel ve güvenli veri saklama
+-  Hızlı ve minimalist arayüz
 
 ---
 
@@ -94,7 +94,3 @@ git clone https://github.com/RieStudio/Ganot.git
 Android Studio üzerinden projeyi açıp Android hedefini çalıştırabilirsiniz.
 
 ---
-
-# Lisans
-
-Bu Proje, [MIT Lisansı](LICENSE) kapsamında lisanslanmıştır.
