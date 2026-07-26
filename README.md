@@ -1,7 +1,7 @@
 # Ganot
 
 <p align="center">
-  <img src="assets/ganotlogo.png" width="220"/>
+  <img src="assets/ganotlogo.png" width="400"/>
 </p>
 
 <p align="center">
@@ -39,12 +39,12 @@ Tamamen hızlı, sade ve dikkat dağıtmayan bir kullanıcı deneyimi sunmayı h
 # Ekran Görüntüleri
 
 <p align="center">
-  <img src="assets/screenshots/1.jpg" width="23%">
-  <img src="assets/screenshots/2.jpg" width="23%">
-  <img src="assets/screenshots/3.jpg" width="23%">
-  <img src="assets/screenshots/4.jpg" width="23%">
-  <img src="assets/screenshots/5.jpg" width="23%">
-  <img src="assets/screenshots/6.jpg" width="23%">
+  <img src="assets/screenshots/1.jpg" width="16%">
+  <img src="assets/screenshots/2.jpg" width="16%">
+  <img src="assets/screenshots/3.jpg" width="16%">
+  <img src="assets/screenshots/4.jpg" width="16%">
+  <img src="assets/screenshots/5.jpg" width="16%">
+  <img src="assets/screenshots/6.jpg" width="16%">
 </p>
 
 ---
