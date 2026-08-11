@@ -118,3 +118,11 @@ app.*.symbols
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
 local.properties
+
+# Local IDE files
+.idea/*.iml
+.idea/caches/deviceStreaming.xml
+.idea/deploymentTargetSelector.xml
+
+# Android/Kotlin build outputs
+composeApp/release/
