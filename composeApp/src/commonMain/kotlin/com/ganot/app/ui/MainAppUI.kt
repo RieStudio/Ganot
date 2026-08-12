@@ -380,33 +380,12 @@ fun TutorialScreen(onTutorialCompleted: () -> Unit) {
     ) {
         val slide = slides[currentSlide]
         val containerBg = if (isDark) DeepCardDark else Color(0xFFEFE6D5)
-        val borderBrush = if (isDark) {
-            Brush.linearGradient(
-                colors = listOf(
-                    slide.accentColor.copy(alpha = 0.3f),
-                    ElectricBlue.copy(alpha = 0.1f)
-                )
-            )
-        } else {
-            Brush.linearGradient(
-                colors = listOf(
-                    slide.accentColor.copy(alpha = 0.6f),
-                    ElectricBlue.copy(alpha = 0.3f)
-                )
-            )
-        }
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .widthIn(max = 550.dp)
                 .clip(RoundedCornerShape(32.dp))
                 .background(containerBg)
-                .border(
-                    width = 1.2.dp,
-                    brush = borderBrush,
-                    shape = RoundedCornerShape(32.dp)
-                )
                 .padding(32.dp)
         ) {
             Column(
@@ -435,14 +414,13 @@ fun TutorialScreen(onTutorialCompleted: () -> Unit) {
                     modifier = Modifier
                         .size(90.dp)
                         .clip(CircleShape)
-                        .background(slide.accentColor.copy(alpha = 0.1f))
-                        .border(1.5.dp, slide.accentColor.copy(alpha = 0.4f), CircleShape),
+                        .background(slide.accentColor),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = slide.icon,
                         contentDescription = slide.subtitle,
-                        tint = slide.accentColor,
+                        tint = containerBg,
                         modifier = Modifier.size(42.dp)
                     )
                 }
