@@ -34,6 +34,7 @@ import com.ganot.app.BuildKonfig
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -96,34 +97,38 @@ fun MainAppUI(viewModel: AcademicViewModel) {
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            bottomBar = {
-                AcademicBottomBar(
-                    currentScreen = currentScreen,
-                    onScreenSelected = { currentScreen = it }
-                )
-            }
+            containerColor = MaterialTheme.colorScheme.background
         ) { innerPadding ->
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
+                modifier = Modifier.fillMaxSize()
             ) {
-                AnimatedContent(
-                    targetState = currentScreen,
-                    transitionSpec = {
-                        fadeIn(animationSpec = tween(220)) togetherWith fadeOut(animationSpec = tween(200))
-                    },
-                    label = "ScreenTransition"
-                ) { screen ->
-                    when (screen) {
-                        AppScreen.HOME -> HomeScreen(viewModel, lectures, events, sessions, onNavigateTo = { currentScreen = it })
-                        AppScreen.TRACKING -> TrackingScreen(viewModel, lectures)
-                        AppScreen.FOCUS -> FocusScreen(viewModel, lectures, sessions)
-                        AppScreen.CALENDAR -> CalendarScreen(viewModel, lectures, events)
-                        AppScreen.SETTINGS -> SettingsScreen(viewModel, lectures, sessions)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = innerPadding.calculateTopPadding())
+                ) {
+                    AnimatedContent(
+                        targetState = currentScreen,
+                        transitionSpec = {
+                            fadeIn(animationSpec = tween(220)) togetherWith fadeOut(animationSpec = tween(200))
+                        },
+                        label = "ScreenTransition"
+                    ) { screen ->
+                        when (screen) {
+                            AppScreen.HOME -> HomeScreen(viewModel, lectures, events, sessions, onNavigateTo = { currentScreen = it })
+                            AppScreen.TRACKING -> TrackingScreen(viewModel, lectures)
+                            AppScreen.FOCUS -> FocusScreen(viewModel, lectures, sessions)
+                            AppScreen.CALENDAR -> CalendarScreen(viewModel, lectures, events)
+                            AppScreen.SETTINGS -> SettingsScreen(viewModel, lectures, sessions)
+                        }
                     }
                 }
+
+                AcademicBottomBar(
+                    currentScreen = currentScreen,
+                    onScreenSelected = { currentScreen = it },
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                )
             }
         }
     }
@@ -521,10 +526,11 @@ data class TutorialSlideData(
 @Composable
 fun AcademicBottomBar(
     currentScreen: AppScreen,
-    onScreenSelected: (AppScreen) -> Unit
+    onScreenSelected: (AppScreen) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.navigationBars)
             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -533,9 +539,15 @@ fun AcademicBottomBar(
         GlassCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(72.dp),
+                .height(72.dp)
+                .shadow(
+                    elevation = 12.dp,
+                    shape = RoundedCornerShape(36.dp),
+                    ambientColor = Color.Black,
+                    spotColor = Color.Black
+                ),
             shape = RoundedCornerShape(36.dp),
-            borderColor = Color.White.copy(alpha = 0.1f)
+            borderColor = if (isDarkThemeActive()) Color.White.copy(alpha = 0.15f) else Color.Black.copy(alpha = 0.05f)
         ) {
             Row(
                 modifier = Modifier
@@ -598,70 +610,58 @@ fun RowScope.BottomBarItem(
     onClick: () -> Unit,
     testTag: String
 ) {
-    val duration = 250
+    val duration = 300
+    val isDark = isDarkThemeActive()
+    
+    // Modern gray selection background
+    val selectionBgColor by animateColorAsState(
+        targetValue = if (isSelected) {
+            if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.05f)
+        } else Color.Transparent,
+        animationSpec = tween(duration),
+        label = "SelectionBg"
+    )
+
     val activeColor = if (screen == AppScreen.FOCUS) NeonPurple else ElectricBlue
     val contentColor by animateColorAsState(
-        targetValue = if (isSelected) activeColor else AdaptWhite.copy(alpha = 0.4f),
+        targetValue = if (isSelected) activeColor else AdaptWhite.copy(alpha = 0.45f),
         animationSpec = tween(duration),
         label = "BottomNavColor"
     )
+    
     val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.15f else 1.0f,
+        targetValue = if (isSelected) 1.05f else 1.0f,
         animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
         label = "BottomNavScale"
     )
 
-    Column(
+    Box(
         modifier = Modifier
             .weight(1f)
+            .fillMaxHeight()
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = onClick
             )
-            .testTag(testTag)
-            .padding(vertical = 2.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .testTag(testTag),
+        contentAlignment = Alignment.Center
     ) {
         Box(
             modifier = Modifier
-                .height(6.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            if (isSelected) {
-                Box(
-                    modifier = Modifier
-                        .size(4.dp)
-                        .background(activeColor, CircleShape)
-                )
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(2.dp))
-        
-        Box(
-            modifier = Modifier.scale(scale),
+                .size(52.dp)
+                .clip(CircleShape)
+                .background(selectionBgColor)
+                .scale(scale),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
                 tint = contentColor,
-                modifier = Modifier.size(22.dp)
+                modifier = Modifier.size(26.dp)
             )
         }
-        
-        Spacer(modifier = Modifier.height(2.dp))
-        
-        Text(
-            text = label,
-            fontSize = 9.sp,
-            color = contentColor,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp
-        )
     }
 }
 

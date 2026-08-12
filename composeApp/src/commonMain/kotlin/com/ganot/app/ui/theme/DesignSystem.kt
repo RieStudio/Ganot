@@ -153,8 +153,12 @@ fun GlassCard(
     content: @Composable BoxScope.() -> Unit
 ) {
     val isDark = isDarkThemeActive()
-    // In light mode, resolve GlassCard to a beautiful pure white container
-    val bgColor = if (isDark) Color.White.copy(alpha = 0.04f) else Color(0xFFFFFFFF)
+    // Pronounced frosted glass effect
+    val bgColor = if (isDark) {
+        Color(0xFF161616).copy(alpha = 0.90f)
+    } else {
+        Color(0xFFFDFDFD).copy(alpha = 0.94f)
+    }
     val finalBorderColor = if (isDark) {
         if (borderColor == Color.Unspecified) Color.White.copy(alpha = 0.08f) else borderColor
     } else {
