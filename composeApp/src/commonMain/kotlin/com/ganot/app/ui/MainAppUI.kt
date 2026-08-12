@@ -144,32 +144,12 @@ fun OnboardingScreen(viewModel: AcademicViewModel, onNameSubmitted: (String) -> 
         contentAlignment = Alignment.Center
     ) {
         val containerBg = if (isDark) DeepCardDark else Color(0xFFEFE6D5)
-        val borderBrush = if (isDark) {
-            Brush.linearGradient(
-                colors = listOf(
-                    NeonPurple.copy(alpha = 0.3f),
-                    NeonBlue.copy(alpha = 0.15f)
-                )
-            )
-        } else {
-            Brush.linearGradient(
-                colors = listOf(
-                    NeonPurple.copy(alpha = 0.6f),
-                    NeonBlue.copy(alpha = 0.5f)
-                )
-            )
-        }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .widthIn(max = 500.dp)
                 .clip(RoundedCornerShape(32.dp))
                 .background(containerBg)
-                .border(
-                    width = 1.2.dp,
-                    brush = borderBrush,
-                    shape = RoundedCornerShape(32.dp)
-                )
                 .padding(32.dp)
         ) {
             Column(
@@ -181,14 +161,13 @@ fun OnboardingScreen(viewModel: AcademicViewModel, onNameSubmitted: (String) -> 
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CircleShape)
-                        .background(NeonPurple.copy(alpha = 0.1f))
-                        .border(1.5.dp, NeonPurple.copy(alpha = 0.4f), CircleShape),
+                        .background(if (isDark) Color.Black.copy(alpha = 0.25f) else Color.Black.copy(alpha = 0.08f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "Profil Simgesi",
-                        tint = NeonBlue,
+                        tint = if (isDark) AdaptWhite.copy(alpha = 0.6f) else AdaptGray,
                         modifier = Modifier.size(36.dp)
                     )
                 }
@@ -198,7 +177,7 @@ fun OnboardingScreen(viewModel: AcademicViewModel, onNameSubmitted: (String) -> 
                 Text(
                     text = "G A N O T",
                     fontSize = 11.sp,
-                    color = NeonPurple,
+                    color = NeonBlue,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 2.sp,
                 )
@@ -216,7 +195,7 @@ fun OnboardingScreen(viewModel: AcademicViewModel, onNameSubmitted: (String) -> 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Kurulumu tamamlamak için lütfen bilgilerinizi girin.",
+                    text = "Kurulumunuzu tamamlamak için lütfen isminizi girin.",
                     fontSize = 13.sp,
                     color = AdaptLightGray,
                     textAlign = TextAlign.Center,
@@ -248,7 +227,7 @@ fun OnboardingScreen(viewModel: AcademicViewModel, onNameSubmitted: (String) -> 
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = AdaptWhite,
                         unfocusedTextColor = AdaptWhite,
-                        focusedBorderColor = NeonPurple,
+                        focusedBorderColor = NeonBlue,
                         unfocusedBorderColor = AdaptWhite.copy(alpha = 0.12f),
                         errorBorderColor = WarningRed,
                         focusedContainerColor = inputContainerBg,
