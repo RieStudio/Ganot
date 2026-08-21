@@ -2,7 +2,7 @@ package com.ganot.app.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
+import kotlinx.datetime.Clock
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -119,7 +119,7 @@ data class FocusSession(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val lectureId: Int? = null,
     val durationMs: Long,
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = Clock.System.now().toEpochMilliseconds()
 )
 
 @Serializable

@@ -9,9 +9,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.pager.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
@@ -622,7 +627,7 @@ fun RowScope.BottomBarItem(
         label = "SelectionBg"
     )
 
-    val activeColor = if (screen == AppScreen.FOCUS) NeonPurple else ElectricBlue
+    val activeColor = ElectricBlue
     val contentColor by animateColorAsState(
         targetValue = if (isSelected) activeColor else AdaptWhite.copy(alpha = 0.45f),
         animationSpec = tween(duration),
@@ -675,7 +680,7 @@ fun HomeScreen(
 ) {
     val (gpa, totalCredits) = viewModel.getCPAGradingTotal()
     val criticalLectures = lectures.filter { it.currentAbsenteeism >= it.maxAbsenteeism * 0.75 }
-    val upcomingEvents = events.filter { !it.isCompleted && it.dueDate > System.currentTimeMillis() }
+    val upcomingEvents = events.filter { !it.isCompleted && it.dueDate > Clock.System.now().toEpochMilliseconds() }
         .sortedBy { it.dueDate }
         .take(3)
 
@@ -841,14 +846,13 @@ fun HomeScreen(
                     
                     Box(
                         modifier = Modifier
-                            .background(WarningRed.copy(alpha = 0.15f), CircleShape)
-                            .border(1.dp, WarningRed.copy(alpha = 0.3f), CircleShape)
+                            .background(WarningRed, CircleShape)
                             .padding(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Text(
                             text = "${criticalLectures.size} DERS RİSKTE",
                             fontSize = 8.5.sp,
-                            color = WarningRed,
+                            color = Color.Black,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
                             softWrap = false
@@ -1071,7 +1075,7 @@ fun HomeScreen(
                         Box(
                             modifier = Modifier
                                 .size(46.dp)
-                                .border(1.5.dp, NeonPurple.copy(alpha = 0.4f), CircleShape),
+                                .border(1.5.dp, ElectricBlue.copy(alpha = 0.4f), CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             val infiniteTransition = rememberInfiniteTransition(label = "Pulse")
@@ -1089,7 +1093,7 @@ fun HomeScreen(
                                 modifier = Modifier
                                     .size(8.dp)
                                     .scale(pulseScale)
-                                    .background(NeonPurple, CircleShape),
+                                    .background(ElectricBlue, CircleShape),
                             )
                         }
                         
@@ -1177,17 +1181,7 @@ fun TrackingScreen(viewModel: AcademicViewModel, lectures: List<Lecture>) {
                         modifier = Modifier
                             .height(40.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(AdaptWhite.copy(alpha = 0.05f))
-                            .border(
-                                width = 1.2.dp,
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        ElectricBlue.copy(alpha = 0.6f),
-                                        NeonPurple.copy(alpha = 0.4f)
-                                    )
-                                ),
-                                shape = RoundedCornerShape(12.dp)
-                             )
+                            .background(ElectricBlue)
                             .clickable { showAddDialog = true }
                             .padding(horizontal = 10.dp),
                         contentAlignment = Alignment.Center
@@ -1199,14 +1193,14 @@ fun TrackingScreen(viewModel: AcademicViewModel, lectures: List<Lecture>) {
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = "Ders Ekle",
-                                tint = ElectricBlue,
+                                tint = Color.White,
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
                                 text = "Ders Ekle",
-                                color = AdaptWhite,
+                                color = Color.White,
                                 fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold,
+                                fontWeight = FontWeight.Bold,
                                 letterSpacing = 0.5.sp,
                                 maxLines = 1,
                                 softWrap = false
@@ -1222,7 +1216,7 @@ fun TrackingScreen(viewModel: AcademicViewModel, lectures: List<Lecture>) {
                     .weight(1f)
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(top = 12.dp, bottom = 80.dp)
+                contentPadding = PaddingValues(top = 12.dp, bottom = 120.dp)
             ) {
 
             if (lectures.isEmpty()) {
@@ -1312,9 +1306,7 @@ fun LectureWithDetailsCard(viewModel: AcademicViewModel, lecture: Lecture) {
     }
 
     NeonCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { isExpanded = !isExpanded },
+        modifier = Modifier.fillMaxWidth(),
         glowColor = if (isCritical) WarningRed else ElectricBlue
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -1421,26 +1413,20 @@ fun LectureWithDetailsCard(viewModel: AcademicViewModel, lecture: Lecture) {
                         .weight(1f)
                         .padding(horizontal = 12.dp)
                         .height(1.dp)
-                        .background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    AdaptLightGray.copy(alpha = 0.15f),
-                                    NeonPurple.copy(alpha = 0.3f)
-                                )
-                            )
-                        )
+                        .background(ElectricBlue.copy(alpha = 0.3f))
                 )
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+                    // Minus button
                     Box(
                         modifier = Modifier
                             .size(44.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(AdaptWhite.copy(alpha = 0.05f))
-                            .border(1.dp, AdaptWhite.copy(alpha = 0.12f), RoundedCornerShape(12.dp))
+                            .border(1.2.dp, ElectricBlue.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                             .clickable { viewModel.updateAbsenteeism(lecture.id, -1) },
                         contentAlignment = Alignment.Center
                     ) {
@@ -1450,28 +1436,13 @@ fun LectureWithDetailsCard(viewModel: AcademicViewModel, lecture: Lecture) {
                                 .background(AdaptWhite)
                         )
                     }
+                    // Plus button
                     Box(
                          modifier = Modifier
                             .size(44.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(
-                                Brush.linearGradient(
-                                    colors = listOf(
-                                        NeonPurple.copy(alpha = 0.3f),
-                                        ElectricBlue.copy(alpha = 0.3f)
-                                    )
-                                )
-                            )
-                            .border(
-                                width = 1.4.dp,
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        NeonPurple.copy(alpha = 0.6f),
-                                        ElectricBlue.copy(alpha = 0.6f)
-                                    )
-                                ),
-                                shape = RoundedCornerShape(12.dp)
-                            )
+                            .background(AdaptWhite.copy(alpha = 0.05f))
+                            .border(1.2.dp, ElectricBlue.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                             .clickable { viewModel.updateAbsenteeism(lecture.id, 1) },
                         contentAlignment = Alignment.Center
                     ) {
@@ -1524,9 +1495,9 @@ fun LectureWithDetailsCard(viewModel: AcademicViewModel, lecture: Lecture) {
                         .padding(14.dp)
                 ) {
                     Text(
-                        text = "DİNAMİK NOT HESAPLAYICI",
+                        text = "NOT HESAPLAYICI",
                         fontSize = 11.sp,
-                        color = NeonPurple,
+                        color = Color.White,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
@@ -1568,7 +1539,7 @@ fun LectureWithDetailsCard(viewModel: AcademicViewModel, lecture: Lecture) {
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = AdaptWhite,
                                     unfocusedTextColor = AdaptWhite,
-                                    focusedBorderColor = NeonPurple,
+                                    focusedBorderColor = ElectricBlue,
                                     unfocusedBorderColor = AdaptWhite.copy(alpha = 0.1f),
                                     focusedContainerColor = Color.Transparent,
                                     unfocusedContainerColor = Color.Transparent
@@ -1590,13 +1561,14 @@ fun LectureWithDetailsCard(viewModel: AcademicViewModel, lecture: Lecture) {
                     ) {
                         Button(
                             onClick = { showDeleteConfirm = true },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                            modifier = Modifier.border(1.dp, WarningRed.copy(alpha = 0.4f), RoundedCornerShape(8.dp)),
-                            contentPadding = PaddingValues(horizontal = 12.dp)
+                            colors = ButtonDefaults.buttonColors(containerColor = WarningRed),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(horizontal = 10.dp),
+                            modifier = Modifier.height(36.dp)
                         ) {
-                            Icon(Icons.Default.Delete, contentDescription = "Sil", tint = WarningRed, modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.Delete, contentDescription = "Sil", tint = Color.White, modifier = Modifier.size(14.dp))
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Dersi Sil", color = WarningRed, fontSize = 12.sp)
+                            Text("Dersi Sil", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                         }
 
                         Button(
@@ -1637,9 +1609,11 @@ fun LectureWithDetailsCard(viewModel: AcademicViewModel, lecture: Lecture) {
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = ElectricBlue),
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(horizontal = 10.dp),
+                            modifier = Modifier.height(36.dp)
                         ) {
-                            Text("Notları Güncelle", color = Color.Black, fontSize = 12.sp)
+                            Text("Notları Güncelle", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -1760,7 +1734,7 @@ fun AddLectureDialog(
                         name = it 
                         nameError = false
                     },
-                    label = { Text("Ders Adı (Örn: Matematik)") },
+                    label = { Text("Ders Adı") },
                     isError = nameError,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = AdaptWhite,
@@ -1871,7 +1845,7 @@ fun FocusScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessions:
     val currentLecture = lectures.find { it.id == selectedLectureId }
 
     val recentSessions = remember(sessions) {
-        val oneWeekAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000L)
+        val oneWeekAgo = Clock.System.now().toEpochMilliseconds() - (7 * 24 * 60 * 60 * 1000L)
         sessions.filter { it.timestamp >= oneWeekAgo }
     }
 
@@ -1944,7 +1918,7 @@ fun FocusScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessions:
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 14.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = "Odaklanma İstasyonu",
@@ -1957,8 +1931,7 @@ fun FocusScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessions:
                 Text(
                     text = "Pomodoro metodu veya serbest çalışma ile verimliliği arttır",
                     fontSize = 11.5.sp,
-                    color = AdaptLightGray,
-                    textAlign = TextAlign.Center,
+                    color = Color.Gray,
                     maxLines = 1,
                     softWrap = false
                 )
@@ -1972,7 +1945,7 @@ fun FocusScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessions:
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp),
-            contentPadding = PaddingValues(top = 12.dp, bottom = 40.dp)
+            contentPadding = PaddingValues(top = 12.dp, bottom = 120.dp)
         ) {
 
         item {
@@ -1989,7 +1962,7 @@ fun FocusScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessions:
                 Box(
                     modifier = Modifier
                         .background(
-                            if (timerMode == "POMODORO") NeonPurple else Color.Transparent,
+                            if (timerMode == "POMODORO") ElectricBlue else Color.Transparent,
                             RoundedCornerShape(8.dp)
                         )
                         .clickable { viewModel.setTimerMode("POMODORO") }
@@ -2005,7 +1978,7 @@ fun FocusScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessions:
                 Box(
                     modifier = Modifier
                         .background(
-                            if (timerMode == "SERBEST") NeonPurple else Color.Transparent,
+                            if (timerMode == "SERBEST") ElectricBlue else Color.Transparent,
                             RoundedCornerShape(8.dp)
                         )
                         .clickable { viewModel.setTimerMode("SERBEST") }
@@ -2030,8 +2003,7 @@ fun FocusScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessions:
             Box {
                 Button(
                     onClick = { showDropD = true },
-                    colors = ButtonDefaults.buttonColors(containerColor = selectorBg),
-                    modifier = Modifier.border(1.dp, selectorBorderColor, RoundedCornerShape(12.dp))
+                    colors = ButtonDefaults.buttonColors(containerColor = selectorBg)
                 ) {
                     Text(
                         text = "Hedef Çalışma Dersi: ${currentLecture?.name ?: "Seçilmedi"}",
@@ -2138,28 +2110,23 @@ fun FocusScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessions:
                     Icon(Icons.Default.Refresh, contentDescription = "Sıfırla", tint = controlBtnTint)
                 }
 
-                Button(
+                IconButton(
                     onClick = {
                         if (isRunning) viewModel.pauseTimer() else viewModel.startTimer()
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = if (isRunning) WarningRed else MintGreen),
                     modifier = Modifier
-                        .height(58.dp)
-                        .width(140.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
+                        .size(54.dp)
+                        .background(
+                            if (isRunning) WarningRed 
+                            else if (isDarkThemeActive()) MintGreen 
+                            else ElectricBlue, 
+                            CircleShape
+                        )
                 ) {
                     Icon(
                         imageVector = if (isRunning) stopIcon else Icons.Default.PlayArrow,
                         contentDescription = "Başlat/Durdur",
                         tint = Color.Black
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = if (isRunning) "Durdur" else "Başlat",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        color = Color.Black
                     )
                 }
 
@@ -2168,10 +2135,9 @@ fun FocusScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessions:
                     enabled = elapsedSeconds > 0,
                     modifier = Modifier
                         .size(54.dp)
-                        .background(ElectricBlue.copy(alpha = 0.15f), CircleShape)
-                        .border(1.dp, ElectricBlue.copy(alpha = 0.4f), CircleShape)
+                        .background(ElectricBlue, CircleShape)
                 ) {
-                    Icon(Icons.Default.Check, contentDescription = "Kaydet", tint = ElectricBlue)
+                    Icon(Icons.Default.Check, contentDescription = "Kaydet", tint = Color.White)
                 }
             }
         }
@@ -2339,7 +2305,7 @@ fun CalendarScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, events
                         Text(
                             text = "Sınav programı ve önemli ödev teslimleri",
                             fontSize = 11.5.sp,
-                            color = AdaptLightGray,
+                            color = Color.Gray,
                             maxLines = 1,
                             softWrap = false
                         )
@@ -2350,17 +2316,7 @@ fun CalendarScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, events
                         modifier = Modifier
                             .height(40.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(addBtnBg)
-                            .border(
-                                width = 1.2.dp,
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        ElectricBlue.copy(alpha = 0.6f),
-                                        NeonPurple.copy(alpha = 0.4f)
-                                    )
-                                ),
-                                shape = RoundedCornerShape(12.dp)
-                            )
+                            .background(ElectricBlue)
                             .clickable { showDialog = true }
                             .padding(horizontal = 10.dp),
                         contentAlignment = Alignment.Center
@@ -2372,14 +2328,14 @@ fun CalendarScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, events
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = "Sınav Ekle",
-                                tint = ElectricBlue,
+                                tint = Color.White,
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
                                 text = "Sınav Ekle",
-                                color = AdaptWhite,
+                                color = Color.White,
                                 fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold,
+                                fontWeight = FontWeight.Bold,
                                 letterSpacing = 0.5.sp,
                                 maxLines = 1,
                                 softWrap = false
@@ -2399,7 +2355,7 @@ fun CalendarScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, events
                     .weight(1f)
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(top = 12.dp, bottom = 80.dp)
+                contentPadding = PaddingValues(top = 12.dp, bottom = 120.dp)
             ) {
 
             item {
@@ -2525,7 +2481,7 @@ fun CalendarScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, events
                                                 text = dayNo.toString(),
                                                 fontSize = 13.sp,
                                                 fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal,
-                                                color = if (isSelected) Color.Black else if (isToday) ElectricBlue else AdaptWhite
+                                                color = if (isSelected) Color.White else if (isToday) ElectricBlue else AdaptWhite
                                             )
                                             if (hasEvents) {
                                                 Spacer(modifier = Modifier.height(2.dp))
@@ -2845,7 +2801,7 @@ fun AddCalendarEventDialog(
                     onValueChange = { title = it },
                     label = { 
                         Text(
-                            text = "Başlık (Örn: Matematik Vize)",
+                            text = "Başlık",
                             fontSize = 11.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -2863,7 +2819,7 @@ fun AddCalendarEventDialog(
                 )
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(start = 12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -2928,19 +2884,39 @@ fun AddCalendarEventDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Button(
-                        onClick = { 
-                            scope.launch {
-                                val currentMs = LocalDateTime(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute)
-                                    .toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
-                                getPlatformHelper().showDatePicker(currentMs)?.let { newMs ->
-                                    val newDate = Instant.fromEpochMilliseconds(newMs).toLocalDateTime(TimeZone.currentSystemDefault())
-                                    selectedYear = newDate.year
-                                    selectedMonth = newDate.monthNumber
-                                    selectedDay = newDate.dayOfMonth
-                                }
+                    var showCustomDatePicker by remember { mutableStateOf(false) }
+                    var showCustomTimePicker by remember { mutableStateOf(false) }
+
+                    if (showCustomDatePicker) {
+                        CustomDatePicker(
+                            initialYear = selectedYear,
+                            initialMonth = selectedMonth,
+                            initialDay = selectedDay,
+                            onDismiss = { showCustomDatePicker = false },
+                            onConfirm = { y, m, d ->
+                                selectedYear = y
+                                selectedMonth = m
+                                selectedDay = d
+                                showCustomDatePicker = false
                             }
-                        },
+                        )
+                    }
+
+                    if (showCustomTimePicker) {
+                        CustomTimePicker(
+                            initialHour = selectedHour,
+                            initialMinute = selectedMinute,
+                            onDismiss = { showCustomTimePicker = false },
+                            onConfirm = { h, mi ->
+                                selectedHour = h
+                                selectedMinute = mi
+                                showCustomTimePicker = false
+                            }
+                        )
+                    }
+
+                    Button(
+                        onClick = { showCustomDatePicker = true },
                         colors = ButtonDefaults.buttonColors(containerColor = cardBtnBg),
                         modifier = Modifier.weight(1f),
                         contentPadding = PaddingValues(8.dp),
@@ -2959,14 +2935,7 @@ fun AddCalendarEventDialog(
                     }
 
                     Button(
-                        onClick = { 
-                            scope.launch {
-                                getPlatformHelper().showTimePicker(selectedHour, selectedMinute)?.let { (h, m) ->
-                                    selectedHour = h
-                                    selectedMinute = m
-                                }
-                            }
-                        },
+                        onClick = { showCustomTimePicker = true },
                         colors = ButtonDefaults.buttonColors(containerColor = cardBtnBg),
                         modifier = Modifier.weight(1f),
                         contentPadding = PaddingValues(8.dp),
@@ -2990,7 +2959,7 @@ fun AddCalendarEventDialog(
                     onValueChange = { classroom = it },
                     label = { 
                         Text(
-                            text = "Sınav Sınıfı / Salonu (Örn: D304, Amfi-1)",
+                            text = "Sınav Sınıfı / Salonu",
                             fontSize = 11.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -3255,7 +3224,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                     .weight(1f)
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(top = 12.dp, bottom = 40.dp)
+                contentPadding = PaddingValues(top = 12.dp, bottom = 120.dp)
             ) {
 
         item {
@@ -3328,7 +3297,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                         )
                         Text(
                             text = "$totalFocusMinutes Dakika",
-                            color = MintGreen,
+                            color = AdaptWhite,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
@@ -3352,7 +3321,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                         )
                         Text(
                             text = "${getPlatformHelper().formatDouble(currentGPA, 2)} / 4.00",
-                            color = NeonPurple,
+                            color = AdaptWhite,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
@@ -3419,9 +3388,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                             .padding(16.dp)
                     ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { isExpanded = !isExpanded },
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -3478,7 +3445,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                     unfocusedTextColor = AdaptWhite,
                                     focusedBorderColor = NeonPurple,
                                     unfocusedBorderColor = AdaptWhite.copy(alpha = 0.12f),
-                                    focusedLabelColor = NeonPurple,
+                                    focusedLabelColor = if (isDarkThemeActive()) ElectricBlue else MintGreen,
                                     unfocusedLabelColor = Color.Gray
                                 ),
                                 textStyle = LocalTextStyle.current.copy(color = AdaptWhite, fontSize = 13.sp),
@@ -3487,7 +3454,6 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                             )
 
-                            HorizontalDivider(color = AdaptDividerColor)
                             Spacer(modifier = Modifier.height(12.dp))
 
                             Text(
@@ -3519,7 +3485,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                         colors = OutlinedTextFieldDefaults.colors(
                                             focusedTextColor = AdaptWhite,
                                             unfocusedTextColor = AdaptWhite,
-                                            focusedBorderColor = NeonPurple,
+                                            focusedBorderColor = if (isDarkThemeActive()) ElectricBlue else MintGreen,
                                             unfocusedBorderColor = fieldBorderColor
                                         ),
                                         textStyle = LocalTextStyle.current.copy(color = AdaptWhite, fontSize = 12.sp),
@@ -3536,11 +3502,12 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                                 criteriaList[index] = criterion.copy(weight = it)
                                             }
                                         },
-                                        placeholder = { Text("Ağırlık %", color = Color.Gray) },
+                                        placeholder = { Text("Ağırlık", color = Color.Gray) },
+                                        trailingIcon = { Text("%", color = AdaptWhite.copy(alpha = 0.5f), fontSize = 12.sp) },
                                         colors = OutlinedTextFieldDefaults.colors(
                                             focusedTextColor = AdaptWhite,
                                             unfocusedTextColor = AdaptWhite,
-                                            focusedBorderColor = NeonPurple,
+                                            focusedBorderColor = if (isDarkThemeActive()) ElectricBlue else MintGreen,
                                             unfocusedBorderColor = fieldBorderColor
                                         ),
                                         textStyle = LocalTextStyle.current.copy(color = AdaptWhite, fontSize = 12.sp),
@@ -3549,16 +3516,20 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                                     )
 
-                                    IconButton(
-                                        onClick = {
-                                            criteriaList.removeAt(index)
-                                        },
-                                        modifier = Modifier.size(48.dp)
+                                    Box(
+                                        modifier = Modifier
+                                            .size(20.dp)
+                                            .background(WarningRed, CircleShape)
+                                            .clickable {
+                                                criteriaList.removeAt(index)
+                                            },
+                                        contentAlignment = Alignment.Center
                                     ) {
                                         Icon(
                                             imageVector = Icons.Default.Clear,
                                             contentDescription = "Sil",
-                                            tint = WarningRed.copy(alpha = 0.8f)
+                                            tint = Color.White,
+                                            modifier = Modifier.size(16.dp)
                                         )
                                     }
                                 }
@@ -3594,21 +3565,22 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                     onClick = {
                                         criteriaList.add(GradeCriterion("Yeni Kriter", 10.0, null))
                                     },
-                                    colors = ButtonDefaults.buttonColors(containerColor = NeonPurple.copy(alpha = 0.12f)),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (isDarkThemeActive()) Color.White else Color(0xFF1A1A1A)
+                                    ),
                                     shape = RoundedCornerShape(10.dp),
-                                    border = BorderStroke(1.dp, NeonPurple.copy(alpha = 0.4f)),
                                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Add,
                                         contentDescription = "Ekle",
-                                        tint = NeonPurple,
+                                        tint = if (isDarkThemeActive()) Color.Black else Color.White,
                                         modifier = Modifier.size(16.dp)
                                     )
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Text(
                                         text = "Kriter Ekle",
-                                        color = NeonPurple,
+                                        color = if (isDarkThemeActive()) Color.Black else Color.White,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold
                                     )
@@ -3634,7 +3606,12 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                     shape = RoundedCornerShape(8.dp),
                                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                                 ) {
-                                    Text("Ayarları Kaydet", color = Color.Black, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    Text(
+                                        text = "Ayarları Kaydet",
+                                        color = if (isDarkThemeActive()) Color.Black else Color.White,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                             }
                         }
@@ -3903,7 +3880,6 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                     showSavedMessage = false
                                 },
                                 label = { Text("Kaç Gün Kala Hatırlatılsın?", color = Color.Gray, fontSize = 12.sp) },
-                                placeholder = { Text("Örn: 3", color = Color.Gray.copy(alpha = 0.5f)) },
                                 singleLine = true,
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 colors = OutlinedTextFieldDefaults.colors(
@@ -4056,22 +4032,23 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                 ""
                             )
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = NeonPurple.copy(alpha = 0.15f)),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isDarkThemeActive()) Color.White else Color(0xFF1A1A1A)
+                        ),
                         shape = RoundedCornerShape(12.dp),
-                        border = BorderStroke(1.dp, NeonPurple.copy(alpha = 0.4f)),
                         modifier = Modifier.fillMaxWidth(),
                         contentPadding = PaddingValues(vertical = 12.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Email,
                             contentDescription = "E-posta Gönder",
-                            tint = NeonPurple,
+                            tint = if (isDarkThemeActive()) Color.Black else Color.White,
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "Hata & Görüş Bildir",
-                            color = NeonPurple,
+                            color = if (isDarkThemeActive()) Color.Black else Color.White,
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp
                         )
@@ -4100,7 +4077,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
 
     if (showDeleteConfirmationDialog) {
         val isDark = isDarkThemeActive()
-        val dialogBg = if (isDark) DeepSurfaceDark else Color(0xFFFFFDF9)
+        val dialogBg = if (isDark) Color(0xFF121212) else Color(0xFFFFFDF9)
         val borderColors = if (isDark) {
             listOf(
                 WarningRed.copy(alpha = 0.4f),
@@ -4187,7 +4164,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
 
     if (showShareDialog) {
         val isDark = isDarkThemeActive()
-        val dialogBg = if (isDark) DeepSurfaceDark else Color(0xFFFFFDF9)
+        val dialogBg = if (isDark) Color(0xFF121212) else Color(0xFFFFFDF9)
         val clipboardManager = androidx.compose.ui.platform.LocalClipboardManager.current
         val borderColors = if (isDark) {
             listOf(ElectricBlue.copy(alpha = 0.4f), Color.Transparent, ElectricBlue.copy(alpha = 0.1f))
@@ -4262,14 +4239,14 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(if (isDark) Color.Black.copy(alpha = 0.3f) else Color(0xFFF3E8FF), RoundedCornerShape(12.dp))
-                                    .border(1.dp, if (isDark) ElectricBlue.copy(alpha = 0.5f) else Color(0xFFC084FC), RoundedCornerShape(12.dp))
+                                    .background(if (isDark) Color.Black.copy(alpha = 0.3f) else MintGreen.copy(alpha = 0.1f), RoundedCornerShape(12.dp))
+                                    .border(1.dp, if (isDark) ElectricBlue.copy(alpha = 0.5f) else MintGreen.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                                     .padding(vertical = 16.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = state.code,
-                                    color = if (isDark) ElectricBlue else Color(0xFF6B21A8),
+                                    color = if (isDark) ElectricBlue else MintGreen,
                                     fontSize = 32.sp,
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = FontFamily.Monospace,
@@ -4283,7 +4260,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                     getPlatformHelper().showToast("Kod panoya kopyalandı!")
                                 },
                                 shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = if (isDark) ElectricBlue else Color(0xFF8B5CF6)),
+                                colors = ButtonDefaults.buttonColors(containerColor = if (isDark) ElectricBlue else MintGreen),
                                 modifier = Modifier.fillMaxWidth(),
                                 contentPadding = PaddingValues(vertical = 12.dp)
                             ) {
@@ -4353,7 +4330,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
 
     if (showImportDialog) {
         val isDark = isDarkThemeActive()
-        val dialogBg = if (isDark) DeepSurfaceDark else Color(0xFFFFFDF9)
+        val dialogBg = if (isDark) Color(0xFF121212) else Color(0xFFFFFDF9)
         val borderColors = if (isDark) {
             listOf(ElectricBlue.copy(alpha = 0.4f), Color.Transparent, ElectricBlue.copy(alpha = 0.1f))
         } else {
@@ -4407,7 +4384,6 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                     importCodeInput = inputCode
                                 },
                                 label = { Text("Paylaşım Kodu", color = AdaptLightGray) },
-                                placeholder = { Text("Örn: 3x7pq2s", color = Color.Gray) },
                                 singleLine = true,
                                 shape = RoundedCornerShape(12.dp),
                                 textStyle = androidx.compose.ui.text.TextStyle(
@@ -4420,9 +4396,9 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = AdaptWhite,
                                     unfocusedTextColor = AdaptWhite,
-                                    focusedBorderColor = ElectricBlue,
+                                    focusedBorderColor = if (isDark) ElectricBlue else MintGreen,
                                     unfocusedBorderColor = if (isDark) Color.White.copy(alpha = 0.12f) else Color(0xFFE5E7EB),
-                                    focusedLabelColor = ElectricBlue
+                                    focusedLabelColor = if (isDark) ElectricBlue else MintGreen
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -4460,7 +4436,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                 enabled = importCodeInput.isNotBlank(),
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = ElectricBlue,
+                                    containerColor = if (isDark) ElectricBlue else MintGreen,
                                     disabledContainerColor = Color.White.copy(alpha = 0.1f)
                                 ),
                                 modifier = Modifier.fillMaxWidth(),
@@ -4547,7 +4523,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = "Başarılı",
-                                    tint = ElectricBlue,
+                                    tint = if (isDark) ElectricBlue else MintGreen,
                                     modifier = Modifier.size(48.dp)
                                 )
                                 Text(
@@ -4570,7 +4546,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                         showImportDialog = false
                                         viewModel.resetImportState()
                                     },
-                                    colors = ButtonDefaults.buttonColors(containerColor = ElectricBlue),
+                                    colors = ButtonDefaults.buttonColors(containerColor = if (isDark) ElectricBlue else MintGreen),
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
@@ -4890,6 +4866,19 @@ fun DetailedSettingsDialog(
                             val currentHour = timeParts.getOrNull(0)?.toIntOrNull() ?: 20
                             val currentMinute = timeParts.getOrNull(1)?.toIntOrNull() ?: 0
                             
+                            var showCustomTimePicker by remember { mutableStateOf(false) }
+                            if (showCustomTimePicker) {
+                                CustomTimePicker(
+                                    initialHour = currentHour,
+                                    initialMinute = currentMinute,
+                                    onDismiss = { showCustomTimePicker = false },
+                                    onConfirm = { h, m ->
+                                        tempReminderTime = "${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}"
+                                        showCustomTimePicker = false
+                                    }
+                                )
+                            }
+                            
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -4900,13 +4889,7 @@ fun DetailedSettingsDialog(
                                         if (isDark) Color.White.copy(alpha = 0.08f) else Color(0xFFE5E7EB),
                                         RoundedCornerShape(10.dp)
                                     )
-                                    .clickable { 
-                                        scope.launch {
-                                            getPlatformHelper().showTimePicker(currentHour, currentMinute)?.let { (h, m) ->
-                                                tempReminderTime = "${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}"
-                                            }
-                                        }
-                                    }
+                                    .clickable { showCustomTimePicker = true }
                                     .padding(vertical = 10.dp, horizontal = 12.dp)
                             ) {
                                 Row(
@@ -4991,3 +4974,302 @@ fun DetailedSettingsDialog(
         }
     }
 }
+
+@Composable
+fun CustomDatePicker(
+    initialYear: Int,
+    initialMonth: Int,
+    initialDay: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int, Int, Int) -> Unit
+) {
+    var selectedYear by remember { mutableStateOf(initialYear) }
+    var selectedMonth by remember { mutableStateOf(initialMonth) }
+    var selectedDay by remember { mutableStateOf(initialDay) }
+
+    val isDark = isDarkThemeActive()
+    val accentColor = ElectricBlue
+
+    val pagerState = rememberPagerState(initialPage = initialMonth - 1) { 12 }
+    val scope = rememberCoroutineScope()
+
+    Dialog(onDismissRequest = onDismiss) {
+        GlassCard(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            shape = RoundedCornerShape(24.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Tarih Seçin", color = AdaptWhite, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { 
+                        scope.launch {
+                            val target = if (pagerState.currentPage > 0) pagerState.currentPage - 1 else 11
+                            if (target == 11) selectedYear--
+                            pagerState.scrollToPage(target)
+                        }
+                    }) {
+                        Icon(Icons.Default.KeyboardArrowLeft, contentDescription = null, tint = AdaptWhite)
+                    }
+                    Text(
+                        text = "${getMonthName(pagerState.currentPage + 1)} $selectedYear",
+                        color = AdaptWhite,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    IconButton(onClick = { 
+                        scope.launch {
+                            val target = if (pagerState.currentPage < 11) pagerState.currentPage + 1 else 0
+                            if (target == 0) selectedYear++
+                            pagerState.scrollToPage(target)
+                        }
+                    }) {
+                        Icon(Icons.Default.KeyboardArrowRight, contentDescription = null, tint = AdaptWhite)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.height(240.dp),
+                    userScrollEnabled = false
+                ) { page ->
+                    val month = page + 1
+                    val daysInMonth = getDaysInMonth(month, selectedYear)
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(7),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items((1..daysInMonth).toList()) { day ->
+                            val isSelected = day == selectedDay && month == selectedMonth
+                            Box(
+                                modifier = Modifier
+                                    .aspectRatio(1f)
+                                    .padding(4.dp)
+                                    .clip(CircleShape)
+                                    .background(if (isSelected) accentColor else Color.Transparent)
+                                    .clickable { 
+                                        selectedDay = day 
+                                        selectedMonth = month
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = day.toString(),
+                                    color = if (isSelected) Color.White else AdaptWhite,
+                                    fontSize = 12.sp
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text("İptal", color = AdaptGray)
+                    }
+                    Button(
+                        onClick = { onConfirm(selectedYear, selectedMonth, selectedDay) },
+                        colors = ButtonDefaults.buttonColors(containerColor = accentColor),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("Tamam", color = Color.White)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CustomTimePicker(
+    initialHour: Int,
+    initialMinute: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int, Int) -> Unit
+) {
+    var selectedHour by remember { mutableStateOf(initialHour) }
+    var selectedMinute by remember { mutableStateOf(initialMinute) }
+
+    val isDark = isDarkThemeActive()
+    val accentColor = ElectricBlue
+
+    Dialog(onDismissRequest = onDismiss) {
+        GlassCard(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            shape = RoundedCornerShape(24.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Saat Seçin", color = AdaptWhite, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    WheelNumberPicker(
+                        value = selectedHour,
+                        range = 0..23,
+                        onValueChange = { selectedHour = it }
+                    )
+                    Text(":", color = AdaptWhite, fontSize = 24.sp, modifier = Modifier.padding(horizontal = 24.dp))
+                    WheelNumberPicker(
+                        value = selectedMinute,
+                        range = 0..59,
+                        onValueChange = { selectedMinute = it }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text("İptal", color = AdaptGray)
+                    }
+                    Button(
+                        onClick = { onConfirm(selectedHour, selectedMinute) },
+                        colors = ButtonDefaults.buttonColors(containerColor = accentColor),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text("Tamam", color = Color.White)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun WheelNumberPicker(
+    value: Int,
+    range: IntRange,
+    onValueChange: (Int) -> Unit
+) {
+    val items = range.toList()
+    val initialIndex = items.indexOf(value)
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
+    val scope = rememberCoroutineScope()
+    val isDark = isDarkThemeActive()
+    
+    val snapFlingBehavior = androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior(lazyListState = listState)
+
+    LaunchedEffect(listState.firstVisibleItemIndex) {
+        onValueChange(items[listState.firstVisibleItemIndex])
+    }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        IconButton(
+            onClick = {
+                scope.launch {
+                    val targetIndex = if (listState.firstVisibleItemIndex > 0) listState.firstVisibleItemIndex - 1 else items.size - 1
+                    listState.animateScrollToItem(targetIndex)
+                }
+            },
+            modifier = Modifier.size(32.dp)
+        ) {
+            Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Arttır", tint = if (isDark) AdaptWhite else Color.Black)
+        }
+
+        Box(
+            modifier = Modifier.height(120.dp).width(60.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            LazyColumn(
+                state = listState,
+                flingBehavior = snapFlingBehavior,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(vertical = 40.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                items(items) { item ->
+                    val isSelected = listState.firstVisibleItemIndex == items.indexOf(item)
+                    val textColor = if (isSelected) {
+                        if (isDark) Color.White else Color.Black
+                    } else {
+                        if (isDark) AdaptWhite.copy(alpha = 0.3f) else Color.Black.copy(alpha = 0.3f)
+                    }
+                    Box(
+                        modifier = Modifier.height(40.dp).fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = item.toString().padStart(2, '0'),
+                            color = textColor,
+                            fontSize = if (isSelected) 32.sp else 24.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                        )
+                    }
+                }
+            }
+            // Selection indicators
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val yTop = size.height / 2 - 20.dp.toPx()
+                val yBottom = size.height / 2 + 20.dp.toPx()
+                val lineColor = if (isDark) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.1f)
+                drawLine(lineColor, Offset(0f, yTop), Offset(size.width, yTop), 1.dp.toPx())
+                drawLine(lineColor, Offset(0f, yBottom), Offset(size.width, yBottom), 1.dp.toPx())
+            }
+        }
+
+        IconButton(
+            onClick = {
+                scope.launch {
+                    val targetIndex = if (listState.firstVisibleItemIndex < items.size - 1) listState.firstVisibleItemIndex + 1 else 0
+                    listState.animateScrollToItem(targetIndex)
+                }
+            },
+            modifier = Modifier.size(32.dp)
+        ) {
+            Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Azalt", tint = if (isDark) AdaptWhite else Color.Black)
+        }
+    }
+}
+
+fun getMonthName(month: Int): String {
+    return when (month) {
+        1 -> "Ocak"
+        2 -> "Şubat"
+        3 -> "Mart"
+        4 -> "Nisan"
+        5 -> "Mayıs"
+        6 -> "Haziran"
+        7 -> "Temmuz"
+        8 -> "Ağustos"
+        9 -> "Eylül"
+        10 -> "Ekim"
+        11 -> "Kasım"
+        12 -> "Aralık"
+        else -> ""
+    }
+}
+
+fun getDaysInMonth(month: Int, year: Int): Int {
+    return when (month) {
+        1, 3, 5, 7, 8, 10, 12 -> 31
+        4, 6, 9, 11 -> 30
+        2 -> if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 29 else 28
+        else -> 31
+    }
+}
+
