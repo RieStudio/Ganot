@@ -52,6 +52,11 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.testTag
 import com.ganot.app.getPlatformHelper
 import kotlinx.datetime.*
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -100,6 +105,8 @@ fun MainAppUI(viewModel: AcademicViewModel) {
         val events by viewModel.events.collectAsState()
         val sessions by viewModel.sessions.collectAsState()
 
+        val hazeState = remember { HazeState() }
+
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.background
@@ -110,12 +117,16 @@ fun MainAppUI(viewModel: AcademicViewModel) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .hazeSource(state = hazeState)
                         .padding(top = innerPadding.calculateTopPadding())
                 ) {
                     AnimatedContent(
                         targetState = currentScreen,
                         transitionSpec = {
-                            fadeIn(animationSpec = tween(220)) togetherWith fadeOut(animationSpec = tween(200))
+                            // Fast & Fluid: Subtle fade + micro-scale for snappiness
+                            fadeIn(animationSpec = tween(250, easing = LinearOutSlowInEasing)) +
+                            scaleIn(initialScale = 0.98f, animationSpec = tween(250, easing = LinearOutSlowInEasing)) togetherWith
+                            fadeOut(animationSpec = tween(200, easing = FastOutLinearInEasing))
                         },
                         label = "ScreenTransition"
                     ) { screen ->
@@ -132,6 +143,7 @@ fun MainAppUI(viewModel: AcademicViewModel) {
                 AcademicBottomBar(
                     currentScreen = currentScreen,
                     onScreenSelected = { currentScreen = it },
+                    hazeState = hazeState,
                     modifier = Modifier.align(Alignment.BottomCenter)
                 )
             }
@@ -532,6 +544,7 @@ data class TutorialSlideData(
 fun AcademicBottomBar(
     currentScreen: AppScreen,
     onScreenSelected: (AppScreen) -> Unit,
+    hazeState: HazeState,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -541,18 +554,25 @@ fun AcademicBottomBar(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
+        val isDark = isDarkThemeActive()
+        val barShape = RoundedCornerShape(36.dp)
+        
         GlassCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(72.dp)
-                .shadow(
-                    elevation = 12.dp,
-                    shape = RoundedCornerShape(36.dp),
-                    ambientColor = Color.Black,
-                    spotColor = Color.Black
+                .clip(barShape)
+                .hazeEffect(
+                    state = hazeState,
+                    style = HazeStyle(
+                        tint = HazeTint(if (isDark) Color(0xFF1C1C1E).copy(alpha = 0.75f) else Color.White.copy(alpha = 0.85f)),
+                        blurRadius = 40.dp,
+                        noiseFactor = 0.2f
+                    )
                 ),
-            shape = RoundedCornerShape(36.dp),
-            borderColor = if (isDarkThemeActive()) Color.White.copy(alpha = 0.15f) else Color.Black.copy(alpha = 0.05f)
+            containerColor = Color.Transparent,
+            shape = barShape,
+            borderWidth = 1.dp
         ) {
             Row(
                 modifier = Modifier
@@ -4994,8 +5014,10 @@ fun CustomDatePicker(
     val scope = rememberCoroutineScope()
 
     Dialog(onDismissRequest = onDismiss) {
+        val opaqueColor = if (isDark) DeepSurfaceDark else Color.White
         GlassCard(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
+            containerColor = opaqueColor,
             shape = RoundedCornerShape(24.dp)
         ) {
             Column(
@@ -5110,8 +5132,10 @@ fun CustomTimePicker(
     val accentColor = ElectricBlue
 
     Dialog(onDismissRequest = onDismiss) {
+        val opaqueColor = if (isDark) DeepSurfaceDark else Color.White
         GlassCard(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
+            containerColor = opaqueColor,
             shape = RoundedCornerShape(24.dp)
         ) {
             Column(

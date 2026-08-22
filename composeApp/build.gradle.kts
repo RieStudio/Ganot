@@ -11,8 +11,8 @@ plugins {
     alias(libs.plugins.buildKonfig)
 }
 
-val appVersionName = "2.10.4"
-val appVersionCode = 7
+val appVersionName = "2.10.5"
+val appVersionCode = 8
 
 kotlin {
     androidTarget {
@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
             implementation(libs.multiplatform.settings)
+            implementation(libs.haze)
         }
         
         androidMain.dependencies {

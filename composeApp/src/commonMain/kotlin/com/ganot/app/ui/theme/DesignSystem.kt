@@ -13,9 +13,11 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -147,54 +149,58 @@ val MintGreenGradient: Brush
 @Composable
 fun GlassCard(
     modifier: Modifier = Modifier,
+    containerColor: Color = Color.Unspecified,
     borderColor: Color = Color.Unspecified,
     borderWidth: Dp = 1.dp,
     shape: RoundedCornerShape = RoundedCornerShape(24.dp),
     content: @Composable BoxScope.() -> Unit
 ) {
     val isDark = isDarkThemeActive()
-    // Pronounced frosted glass effect
-    val bgColor = if (isDark) {
-        Color(0xFF161616).copy(alpha = 0.90f)
+    
+    // Apple-style Frosted Glass Colors (Higher translucency)
+    val bgColor = if (containerColor != Color.Unspecified) {
+        containerColor
+    } else if (isDark) {
+        Color(0xFF1C1C1E).copy(alpha = 0.72f)
     } else {
-        Color(0xFFFDFDFD).copy(alpha = 0.94f)
+        Color(0xFFFFFFFF).copy(alpha = 0.70f)
     }
-    val finalBorderColor = if (isDark) {
-        if (borderColor == Color.Unspecified) Color.White.copy(alpha = 0.08f) else borderColor
+    
+    // 1px bright/translucent border for the "glass edge" look
+    val glassBorderColor = if (isDark) {
+        if (borderColor == Color.Unspecified) Color.White.copy(alpha = 0.18f) else borderColor
     } else {
-        if (borderColor == Color.Unspecified) Color(0xFFE5E7EB) else borderColor
+        if (borderColor == Color.Unspecified) Color.White.copy(alpha = 0.50f) else borderColor
     }
-    val borderColors = if (isDark) {
-        listOf(
-            finalBorderColor.copy(alpha = 0.12f),
-            finalBorderColor.copy(alpha = 0.02f)
-        )
-    } else {
-        listOf(
-            finalBorderColor,
-            finalBorderColor.copy(alpha = 0.3f)
-        )
-    }
+    
+    // Gradient border: bright on top/left, subtle on bottom/right
+    val borderBrush = Brush.linearGradient(
+        colors = listOf(
+            glassBorderColor,
+            glassBorderColor.copy(alpha = 0.05f)
+        ),
+        start = androidx.compose.ui.geometry.Offset(0f, 0f),
+        end = androidx.compose.ui.geometry.Offset.Infinite
+    )
 
-    val finalModifier = if (isDark) {
-        modifier
-    } else {
-        modifier.shadow(
-            elevation = 6.dp,
-            shape = shape,
-            clip = false,
-            ambientColor = Color.Black.copy(alpha = 0.01f),
-            spotColor = Color.Black.copy(alpha = 0.03f)
-        )
-    }
+    // Premium Shadow for depth
+    val shadowColor = if (isDark) Color.Black.copy(alpha = 0.45f) else Color.Black.copy(alpha = 0.08f)
+    val shadowElevation = 16.dp
 
     Box(
-        modifier = finalModifier
+        modifier = modifier
+            .shadow(
+                elevation = shadowElevation,
+                shape = shape,
+                clip = false,
+                ambientColor = shadowColor,
+                spotColor = shadowColor
+            )
             .clip(shape)
             .background(bgColor)
             .border(
                 width = borderWidth,
-                brush = Brush.linearGradient(colors = borderColors),
+                brush = borderBrush,
                 shape = shape
             )
     ) {
