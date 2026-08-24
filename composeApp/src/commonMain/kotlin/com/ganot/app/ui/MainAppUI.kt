@@ -123,10 +123,8 @@ fun MainAppUI(viewModel: AcademicViewModel) {
                     AnimatedContent(
                         targetState = currentScreen,
                         transitionSpec = {
-                            // Fast & Fluid: Subtle fade + micro-scale for snappiness
-                            fadeIn(animationSpec = tween(250, easing = LinearOutSlowInEasing)) +
-                            scaleIn(initialScale = 0.98f, animationSpec = tween(250, easing = LinearOutSlowInEasing)) togetherWith
-                            fadeOut(animationSpec = tween(200, easing = FastOutLinearInEasing))
+                            // Ultra Fast & Snappy transition
+                            fadeIn(animationSpec = tween(120)) togetherWith fadeOut(animationSpec = tween(100))
                         },
                         label = "ScreenTransition"
                     ) { screen ->
@@ -3244,7 +3242,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                     .weight(1f)
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(top = 12.dp, bottom = 120.dp)
+                contentPadding = PaddingValues(top = 12.dp, bottom = 85.dp)
             ) {
 
         item {
