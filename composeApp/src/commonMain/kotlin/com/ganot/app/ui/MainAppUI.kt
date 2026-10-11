@@ -761,95 +761,83 @@ fun HomeScreen(
             contentPadding = PaddingValues(top = 12.dp, bottom = 120.dp)
         ) {
             item {
+            val isDarkGpa = isDarkThemeActive()
+            val gpaBorderColor = if (isDarkGpa) Color.White.copy(alpha = 0.08f) else Color(0xFFE2E8F0)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(32.dp))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                NeonPurple.copy(alpha = 0.25f),
-                                ElectricBlue.copy(alpha = 0.15f)
-                            )
-                        )
-                    )
-                    .padding(1.dp)
+                    .background(DeepSurfaceDark.copy(alpha = 0.9f))
+                    .border(1.dp, gpaBorderColor, RoundedCornerShape(32.dp))
+                    .padding(20.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(32.dp))
-                        .background(DeepSurfaceDark.copy(alpha = 0.9f))
-                        .padding(20.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        modifier = Modifier.weight(1f).padding(end = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.weight(1f).padding(end = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        Text(
+                            text = "GENEL ORTALAMA",
+                            fontSize = 11.sp,
+                            color = Color(0xFF94A3B8),
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 1.sp,
+                            maxLines = 1,
+                            softWrap = false
+                        )
+                        
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.Bottom,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Text(
-                                text = "GENEL ORTALAMA",
-                                fontSize = 11.sp,
-                                color = Color(0xFF94A3B8),
-                                fontWeight = FontWeight.Medium,
-                                letterSpacing = 1.sp,
+                                text = getPlatformHelper().formatDouble(gpa, 2),
+                                fontSize = 36.sp,
+                                color = AdaptWhite,
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = (-1).sp,
                                 maxLines = 1,
                                 softWrap = false
                             )
-                            
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.Bottom,
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                Text(
-                                    text = getPlatformHelper().formatDouble(gpa, 2),
-                                    fontSize = 36.sp,
-                                    color = AdaptWhite,
-                                    fontWeight = FontWeight.Black,
-                                    letterSpacing = (-1).sp,
-                                    maxLines = 1,
-                                    softWrap = false
-                                )
-                            }
                         }
-                        
-                        Box(
-                            modifier = Modifier.size(76.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            val arcTrackColor = if (isDarkThemeActive()) Color(0xFF262626) else Color(0xFFEFE6D5)
-                            val canvasColor = NeonPurple
-                            Canvas(modifier = Modifier.size(76.dp)) {
-                                drawArc(
-                                    color = arcTrackColor,
-                                    startAngle = -90f,
-                                    sweepAngle = 360f,
-                                    useCenter = false,
-                                    style = Stroke(width = 6.dp.toPx(), cap = StrokeCap.Round)
-                                )
-                                val sweepAmount = ((gpa / 4.0).coerceIn(0.0, 1.0) * 360f).toFloat()
-                                drawArc(
-                                    color = canvasColor,
-                                    startAngle = -90f,
-                                    sweepAngle = sweepAmount,
-                                    useCenter = false,
-                                    style = Stroke(width = 6.dp.toPx(), cap = StrokeCap.Round)
-                                )
-                            }
-                            
-                            Text(
-                                text = "4.00",
-                                fontSize = 11.sp,
-                                color = AdaptWhite,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = (-0.5).sp
+                    }
+                    
+                    Box(
+                        modifier = Modifier.size(76.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val arcTrackColor = if (isDarkThemeActive()) Color(0xFF262626) else Color(0xFFEFE6D5)
+                        val canvasColor = NeonPurple
+                        Canvas(modifier = Modifier.size(76.dp)) {
+                            drawArc(
+                                color = arcTrackColor,
+                                startAngle = -90f,
+                                sweepAngle = 360f,
+                                useCenter = false,
+                                style = Stroke(width = 6.dp.toPx(), cap = StrokeCap.Round)
+                            )
+                            val sweepAmount = ((gpa / 4.0).coerceIn(0.0, 1.0) * 360f).toFloat()
+                            drawArc(
+                                color = canvasColor,
+                                startAngle = -90f,
+                                sweepAngle = sweepAmount,
+                                useCenter = false,
+                                style = Stroke(width = 6.dp.toPx(), cap = StrokeCap.Round)
                             )
                         }
+                        
+                        Text(
+                            text = "4.00",
+                            fontSize = 11.sp,
+                            color = AdaptWhite,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = (-0.5).sp
+                        )
                     }
                 }
             }
@@ -1432,13 +1420,6 @@ fun LectureWithDetailsCard(viewModel: AcademicViewModel, lecture: Lecture) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = null,
-                    tint = ElectricBlue,
-                    modifier = Modifier.size(15.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = "Devamsızlık Kaydı:",
                     fontSize = 12.sp,
@@ -2396,13 +2377,13 @@ fun CalendarScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, events
             ) {
 
             item {
+                val isDarkCalendar = isDarkThemeActive()
+                val calBorderColor = if (isDarkCalendar) Color.White.copy(alpha = 0.08f) else Color(0xFFE2E8F0)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(calBg, RoundedCornerShape(20.dp))
-                        .run {
-                            if (!isDarkTheme) this.border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(20.dp)) else this
-                        }
+                        .border(1.dp, calBorderColor, RoundedCornerShape(20.dp))
                         .padding(16.dp)
                 ) {
                     Row(

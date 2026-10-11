@@ -166,11 +166,11 @@ fun GlassCard(
         Color(0xFFFFFFFF).copy(alpha = 0.70f)
     }
     
-    // 1px bright/translucent border for the "glass edge" look
+    // 1px subtle neutral gray border
     val glassBorderColor = if (isDark) {
-        if (borderColor == Color.Unspecified) Color.White.copy(alpha = 0.18f) else borderColor
+        if (borderColor == Color.Unspecified) Color.White.copy(alpha = 0.08f) else borderColor
     } else {
-        if (borderColor == Color.Unspecified) Color.White.copy(alpha = 0.50f) else borderColor
+        if (borderColor == Color.Unspecified) Color(0xFFE2E8F0) else borderColor
     }
     
     // Gradient border: bright on top/left, subtle on bottom/right
@@ -219,23 +219,15 @@ fun NeonCard(
     val bgColor = if (isDark) DeepCardDark else Color(0xFFFFFFFF)
     
     val finalBorderColor = if (isDark) {
-        glowColor.copy(alpha = 0.12f) // keep it extremely eye-friendly in dark mode
+        Color.White.copy(alpha = 0.08f)
     } else {
-        Color(0xFFE5E7EB) // soft borders in light mode
+        Color(0xFFE2E8F0)
     }
     
-    val borderColors = if (isDark) {
-        listOf(
-            finalBorderColor,
-            Color.Transparent,
-            finalBorderColor.copy(alpha = 0.02f)
-        )
-    } else {
-        listOf(
-            finalBorderColor,
-            Color(0xFFEEF2F6)
-        )
-    }
+    val borderColors = listOf(
+        finalBorderColor,
+        finalBorderColor.copy(alpha = 0.3f)
+    )
 
     val finalModifier = if (isDark) {
         modifier
