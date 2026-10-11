@@ -11,8 +11,8 @@ plugins {
     alias(libs.plugins.buildKonfig)
 }
 
-val appVersionName = "2.10.5"
-val appVersionCode = 8
+val appVersionName = "2.11.0"
+val appVersionCode = 9
 
 kotlin {
     androidTarget {
