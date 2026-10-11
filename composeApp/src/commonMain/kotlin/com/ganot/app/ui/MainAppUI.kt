@@ -1015,66 +1015,72 @@ fun HomeScreen(
                 val associatedLecture = lectures.find { it.id == event.lectureId }
                 
                 GlassCard {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            val badgeColor = when (event.type) {
-                                "SINAV" -> WarningRed
-                                "ÖDEV" -> ElectricBlue
-                                else -> NeonPurple
-                            }
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Box(
-                                    modifier = Modifier
-                                        .background(badgeColor.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
-                                        .border(1.dp, badgeColor.copy(alpha = 0.3f), RoundedCornerShape(6.dp))
-                                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                                ) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 38.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                if (associatedLecture != null) {
                                     Text(
-                                        text = event.type,
-                                        fontSize = 10.sp,
-                                        color = badgeColor,
-                                        fontWeight = FontWeight.Bold
+                                        text = associatedLecture.name,
+                                        fontSize = 11.sp,
+                                        color = Color.Gray,
+                                        maxLines = 1,
+                                        softWrap = false
                                     )
+                                    Spacer(modifier = Modifier.height(4.dp))
                                 }
-                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = associatedLecture?.name ?: "Genel",
-                                    fontSize = 11.sp,
-                                    color = Color.Gray,
-                                    maxLines = 1,
-                                    softWrap = false
+                                    text = event.title,
+                                    fontSize = 16.sp,
+                                    color = AdaptWhite,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = getPlatformHelper().formatDate(event.dueDate, "dd MMMM yyyy - HH:mm"),
+                                    fontSize = 12.sp,
+                                    color = AdaptLightGray
                                 )
                             }
                             
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = event.title,
-                                fontSize = 16.sp,
-                                color = AdaptWhite,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = getPlatformHelper().formatDate(event.dueDate, "dd MMMM yyyy - HH:mm"),
-                                fontSize = 12.sp,
-                                color = AdaptLightGray
-                            )
+                            IconButton(
+                                onClick = { viewModel.toggleEventCompleted(event) },
+                                modifier = Modifier.background(AdaptWhite.copy(alpha = 0.05f), CircleShape)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = "Tamamla",
+                                    tint = ElectricBlue
+                                )
+                            }
                         }
-                        
-                        IconButton(
-                            onClick = { viewModel.toggleEventCompleted(event) },
-                            modifier = Modifier.background(AdaptWhite.copy(alpha = 0.05f), CircleShape)
+
+                        val (badgeBg, badgeTextColor) = when (event.type) {
+                            "SINAV" -> WarningRed to Color.Black
+                            "ÖDEV" -> ElectricBlue to Color.Black
+                            else -> NeonPurple to Color.White
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .background(
+                                    color = badgeBg,
+                                    shape = RoundedCornerShape(topStart = 24.dp, bottomEnd = 12.dp)
+                                )
+                                .padding(horizontal = 14.dp, vertical = 5.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = "Tamamla",
-                                tint = ElectricBlue
+                            Text(
+                                text = event.type,
+                                fontSize = 10.sp,
+                                color = badgeTextColor,
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 0.5.sp
                             )
                         }
                     }
@@ -2581,43 +2587,28 @@ fun CalendarScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, events
                 }
             } else {
                 items(filteredEvents) { event ->
-                    val lecture = lectures.find { it.id == event.lectureId }
-                    
-                    GlassCard {
+                val lecture = lectures.find { it.id == event.lectureId }
+                
+                GlassCard {
+                    Box(modifier = Modifier.fillMaxWidth()) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp),
+                                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 38.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
-                                val priorityColor = when (event.type) {
-                                    "SINAV" -> WarningRed
-                                    "ÖDEV" -> ElectricBlue
-                                    else -> NeonPurple
-                                }
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Box(
-                                        modifier = Modifier
-                                            .background(priorityColor.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
-                                            .padding(horizontal = 6.dp, vertical = 2.dp)
-                                    ) {
-                                        Text(
-                                            text = event.type,
-                                            fontSize = 9.sp,
-                                            color = priorityColor,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.width(8.dp))
+                                if (lecture != null) {
                                     Text(
-                                        text = lecture?.name ?: "Genel",
-                                        fontSize = 12.sp,
-                                        color = AdaptGray
+                                        text = lecture.name,
+                                        fontSize = 11.sp,
+                                        color = AdaptGray,
+                                        maxLines = 1,
+                                        softWrap = false
                                     )
+                                    Spacer(modifier = Modifier.height(4.dp))
                                 }
-                                Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = event.title,
                                     fontSize = 16.sp,
@@ -2684,8 +2675,33 @@ fun CalendarScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, events
                                 }
                             }
                         }
+
+                        val (badgeBg, badgeTextColor) = when (event.type) {
+                            "SINAV" -> WarningRed to Color.Black
+                            "ÖDEV" -> ElectricBlue to Color.Black
+                            else -> NeonPurple to Color.White
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .background(
+                                    color = badgeBg,
+                                    shape = RoundedCornerShape(topStart = 24.dp, bottomEnd = 12.dp)
+                                )
+                                .padding(horizontal = 14.dp, vertical = 5.dp)
+                        ) {
+                            Text(
+                                text = event.type,
+                                fontSize = 10.sp,
+                                color = badgeTextColor,
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 0.5.sp
+                            )
+                        }
                     }
                 }
+            }
             }
         }
         }
