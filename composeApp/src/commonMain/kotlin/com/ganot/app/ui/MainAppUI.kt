@@ -3110,13 +3110,14 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                         }
                         
                         val isDarkMenu = isDarkThemeActive()
+                        val normalTextColor = AdaptWhite
                         DropdownMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
-                            shape = RoundedCornerShape(20.dp),
+                            shape = RoundedCornerShape(16.dp),
                             modifier = Modifier
                                 .background(if (isDarkMenu) DeepSurfaceDark else Color.White)
-                                .border(1.dp, if (isDarkMenu) Color.White.copy(alpha = 0.12f) else Color(0xFFE5E7EB), RoundedCornerShape(20.dp))
+                                .border(1.dp, if (isDarkMenu) Color.White.copy(alpha = 0.12f) else Color(0xFFE5E7EB), RoundedCornerShape(16.dp))
                         ) {
                             DropdownMenuItem(
                                 text = {
@@ -3124,15 +3125,15 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                         Icon(
                                             imageVector = Icons.Default.Send,
                                             contentDescription = null,
-                                            tint = if (isDarkMenu) ElectricBlue else NeonPurple,
-                                            modifier = Modifier.size(16.dp)
+                                            tint = normalTextColor,
+                                            modifier = Modifier.size(18.dp)
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Spacer(modifier = Modifier.width(10.dp))
                                         Text(
                                             text = "Sınıf Ayarlarını Paylaş",
-                                            color = if (isDarkMenu) Color.White else Color.Black,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 13.sp
+                                            color = normalTextColor,
+                                            fontWeight = FontWeight.Medium,
+                                            fontSize = 13.5.sp
                                         )
                                     }
                                 },
@@ -3140,11 +3141,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                     showMenu = false
                                     viewModel.shareLectures()
                                     showShareDialog = true
-                                },
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                                    .clip(RoundedCornerShape(14.dp))
-                                    .background(if (isDarkMenu) ElectricBlue.copy(alpha = 0.08f) else NeonPurple.copy(alpha = 0.08f))
+                                }
                             )
 
                             DropdownMenuItem(
@@ -3153,15 +3150,15 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                         Icon(
                                             imageVector = Icons.Default.Add,
                                             contentDescription = null,
-                                            tint = ElectricBlue,
-                                            modifier = Modifier.size(16.dp)
+                                            tint = normalTextColor,
+                                            modifier = Modifier.size(18.dp)
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Spacer(modifier = Modifier.width(10.dp))
                                         Text(
                                             text = "Paylaşım Kodu Gir",
-                                            color = if (isDarkMenu) Color.White else Color.Black,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 13.sp
+                                            color = normalTextColor,
+                                            fontWeight = FontWeight.Medium,
+                                            fontSize = 13.5.sp
                                         )
                                     }
                                 },
@@ -3170,11 +3167,7 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                     importCodeInput = ""
                                     viewModel.resetImportState()
                                     showImportDialog = true
-                                },
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                                    .clip(RoundedCornerShape(14.dp))
-                                    .background(ElectricBlue.copy(alpha = 0.08f))
+                                }
                             )
 
                             DropdownMenuItem(
@@ -3183,26 +3176,22 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                         Icon(
                                             imageVector = Icons.Default.Settings,
                                             contentDescription = null,
-                                            tint = NeonBlue,
-                                            modifier = Modifier.size(16.dp)
+                                            tint = normalTextColor,
+                                            modifier = Modifier.size(18.dp)
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Spacer(modifier = Modifier.width(10.dp))
                                         Text(
                                             text = "Detaylı Ayarlar",
-                                            color = if (isDarkMenu) Color.White else Color.Black,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 13.sp
+                                            color = normalTextColor,
+                                            fontWeight = FontWeight.Medium,
+                                            fontSize = 13.5.sp
                                         )
                                     }
                                 },
                                 onClick = {
                                     showMenu = false
                                     showDetailedSettingsDialog = true
-                                },
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                                    .clip(RoundedCornerShape(14.dp))
-                                    .background(NeonBlue.copy(alpha = 0.08f))
+                                }
                             )
 
                             DropdownMenuItem(
@@ -3211,26 +3200,22 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                         Icon(
                                             imageVector = Icons.Default.Info,
                                             contentDescription = null,
-                                            tint = NeonPurple,
-                                            modifier = Modifier.size(16.dp)
+                                            tint = normalTextColor,
+                                            modifier = Modifier.size(18.dp)
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Spacer(modifier = Modifier.width(10.dp))
                                         Text(
                                             text = "Öğreticiyi Tekrar İzle",
-                                            color = if (isDarkMenu) Color.White else Color.Black,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 13.sp
+                                            color = normalTextColor,
+                                            fontWeight = FontWeight.Medium,
+                                            fontSize = 13.5.sp
                                         )
                                     }
                                 },
                                 onClick = {
                                     showMenu = false
                                     viewModel.triggerTutorialReplay()
-                                },
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                                    .clip(RoundedCornerShape(14.dp))
-                                    .background(NeonPurple.copy(alpha = 0.08f))
+                                }
                             )
 
                             DropdownMenuItem(
@@ -3240,25 +3225,21 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                                             imageVector = Icons.Default.Delete,
                                             contentDescription = null,
                                             tint = WarningRed,
-                                            modifier = Modifier.size(16.dp)
+                                            modifier = Modifier.size(18.dp)
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Spacer(modifier = Modifier.width(10.dp))
                                         Text(
                                             text = "Tüm Verileri Temizle",
                                             color = WarningRed,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 13.sp
+                                            fontWeight = FontWeight.SemiBold,
+                                            fontSize = 13.5.sp
                                         )
                                     }
                                 },
                                 onClick = {
                                     showMenu = false
                                     showDeleteConfirmationDialog = true
-                                },
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                                    .clip(RoundedCornerShape(14.dp))
-                                    .background(WarningRed.copy(alpha = 0.08f))
+                                }
                             )
                         }
                     }
