@@ -3259,27 +3259,15 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
             ) {
 
         item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = "Bilanço",
-                    tint = ElectricBlue,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = "GENEL AKADEMİK BİLANÇO",
-                    fontSize = 13.sp,
-                    color = ElectricBlue,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            Text(
+                text = "GENEL AKADEMİK BİLANÇO",
+                fontSize = 13.sp,
+                color = ElectricBlue,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
 
         item {
@@ -3364,28 +3352,16 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
         }
 
         item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            Text(
+                text = "DERS DEĞERLENDİRME AYARLARI",
+                fontSize = 13.sp,
+                color = ElectricBlue,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = 8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Kriterler",
-                    tint = ElectricBlue,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = "DERS DEĞERLENDİRME AYARLARI",
-                    fontSize = 13.sp,
-                    color = ElectricBlue,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            )
         }
 
         if (lectures.isEmpty()) {
@@ -3652,25 +3628,14 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
         }
 
         item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            Text(
+                text = "KİŞİSELLEŞTİRME & SİSTEM",
+                fontSize = 13.sp,
+                color = ElectricBlue,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
                 modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Sistem",
-                    tint = ElectricBlue,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = "KİŞİSELLEŞTİRME & SİSTEM",
-                    fontSize = 13.sp,
-                    color = ElectricBlue,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp
-                )
-            }
+            )
         }
 
         item {
@@ -3850,23 +3815,12 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = "Bildirim",
-                                tint = ElectricBlue,
-                                modifier = Modifier.size(18.dp)
-                             )
-                            Text(
-                                text = "Bildirim & Hatırlatıcı",
-                                color = AdaptWhite,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                        Text(
+                            text = "Bildirim & Hatırlatıcı",
+                            color = AdaptWhite,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                         
                         Switch(
                             checked = isNotificationsEnabled,
@@ -3997,25 +3951,14 @@ fun SettingsScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, sessio
         }
 
         item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            Text(
+                text = "GERİ BİLDİRİM",
+                fontSize = 13.sp,
+                color = ElectricBlue,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
                 modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Info,
-                    contentDescription = "Hakkında",
-                    tint = ElectricBlue,
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    text = "GERİ BİLDİRİM",
-                    fontSize = 13.sp,
-                    color = ElectricBlue,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp
-                )
-            }
+            )
         }
 
         item {
