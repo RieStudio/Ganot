@@ -1059,16 +1059,17 @@ fun HomeScreen(
                                 .align(Alignment.TopStart)
                                 .background(
                                     color = badgeBg,
-                                    shape = RoundedCornerShape(topStart = 24.dp, bottomEnd = 12.dp)
+                                    shape = RoundedCornerShape(topStart = 24.dp, bottomEnd = 10.dp)
                                 )
-                                .padding(horizontal = 14.dp, vertical = 5.dp)
+                                .padding(horizontal = 10.dp, vertical = 3.dp)
                         ) {
                             Text(
-                                text = event.type,
-                                fontSize = 10.sp,
+                                text = event.type.uppercase(),
+                                fontSize = 11.5.sp,
                                 color = badgeTextColor,
                                 fontWeight = FontWeight.Black,
-                                letterSpacing = 0.5.sp
+                                fontFamily = FontFamily.Monospace,
+                                letterSpacing = 1.2.sp
                             )
                         }
                     }
@@ -2668,16 +2669,17 @@ fun CalendarScreen(viewModel: AcademicViewModel, lectures: List<Lecture>, events
                                 .align(Alignment.TopStart)
                                 .background(
                                     color = badgeBg,
-                                    shape = RoundedCornerShape(topStart = 24.dp, bottomEnd = 12.dp)
+                                    shape = RoundedCornerShape(topStart = 24.dp, bottomEnd = 10.dp)
                                 )
-                                .padding(horizontal = 14.dp, vertical = 5.dp)
+                                .padding(horizontal = 10.dp, vertical = 3.dp)
                         ) {
                             Text(
-                                text = event.type,
-                                fontSize = 10.sp,
+                                text = event.type.uppercase(),
+                                fontSize = 11.5.sp,
                                 color = badgeTextColor,
                                 fontWeight = FontWeight.Black,
-                                letterSpacing = 0.5.sp
+                                fontFamily = FontFamily.Monospace,
+                                letterSpacing = 1.2.sp
                             )
                         }
                     }
