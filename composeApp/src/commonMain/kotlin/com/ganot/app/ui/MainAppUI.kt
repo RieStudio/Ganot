@@ -382,16 +382,18 @@ fun TutorialScreen(onTutorialCompleted: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .widthIn(max = 550.dp)
+                .widthIn(max = 520.dp)
+                .height(500.dp)
                 .clip(RoundedCornerShape(32.dp))
                 .background(containerBg)
-                .padding(32.dp)
+                .padding(horizontal = 28.dp, vertical = 24.dp)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxSize()
             ) {
+                // Top "Atla" Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
@@ -407,122 +409,133 @@ fun TutorialScreen(onTutorialCompleted: () -> Unit) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Box(
+                // Middle Content
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .size(90.dp)
-                        .clip(CircleShape)
-                        .background(slide.accentColor),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .weight(1f)
                 ) {
-                    Icon(
-                        imageVector = slide.icon,
-                        contentDescription = slide.subtitle,
-                        tint = containerBg,
-                        modifier = Modifier.size(42.dp)
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(CircleShape)
+                            .background(slide.accentColor),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = slide.icon,
+                            contentDescription = slide.subtitle,
+                            tint = containerBg,
+                            modifier = Modifier.size(38.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = slide.title,
+                        fontSize = 11.sp,
+                        color = slide.accentColor,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 2.sp,
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Text(
+                        text = slide.subtitle,
+                        fontSize = 19.sp,
+                        color = AdaptWhite,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(
+                        text = slide.description,
+                        fontSize = 13.sp,
+                        color = AdaptLightGray,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 18.sp,
+                        modifier = Modifier.padding(horizontal = 4.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = slide.title,
-                    fontSize = 11.sp,
-                    color = slide.accentColor,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 2.sp,
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = slide.subtitle,
-                    fontSize = 20.sp,
-                    color = AdaptWhite,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = slide.description,
-                    fontSize = 13.sp,
-                    color = AdaptLightGray,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 19.sp,
-                    modifier = Modifier.padding(horizontal = 4.dp)
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                // Bottom Indicators and Buttons
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    slides.forEachIndexed { idx, _ ->
-                        val isSelected = currentSlide == idx
-                        val dotWidth = if (isSelected) 18.dp else 6.dp
-                        val dotColor = if (isSelected) slide.accentColor else AdaptGray.copy(alpha = 0.3f)
-                        Box(
-                            modifier = Modifier
-                                .width(dotWidth)
-                                .height(6.dp)
-                                .clip(CircleShape)
-                                .background(dotColor)
-                                .clickable { currentSlide = idx }
-                        )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        slides.forEachIndexed { idx, _ ->
+                            val isSelected = currentSlide == idx
+                            val dotWidth = if (isSelected) 18.dp else 6.dp
+                            val dotColor = if (isSelected) slide.accentColor else AdaptGray.copy(alpha = 0.3f)
+                            Box(
+                                modifier = Modifier
+                                    .width(dotWidth)
+                                    .height(6.dp)
+                                    .clip(CircleShape)
+                                    .background(dotColor)
+                                    .clickable { currentSlide = idx }
+                            )
+                        }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Back button / Prevs
-                    if (currentSlide > 0) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Back button / Prevs
+                        if (currentSlide > 0) {
+                            Button(
+                                onClick = { currentSlide-- },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (isDark) Color.White.copy(alpha = 0.05f) else Color.Black.copy(alpha = 0.05f)
+                                ),
+                                shape = RoundedCornerShape(12.dp),
+                                modifier = Modifier.height(44.dp)
+                            ) {
+                                Text("Geri", color = AdaptWhite, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            }
+                        } else {
+                            Spacer(modifier = Modifier.width(70.dp))
+                        }
+
+                        // Next / Start button
                         Button(
-                            onClick = { currentSlide-- },
+                            onClick = {
+                                if (currentSlide < slides.lastIndex) {
+                                    currentSlide++
+                                } else {
+                                    onTutorialCompleted()
+                                }
+                            },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (isDark) Color.White.copy(alpha = 0.05f) else Color.Black.copy(alpha = 0.05f)
+                                containerColor = slide.accentColor
                             ),
                             shape = RoundedCornerShape(12.dp),
-                            modifier = Modifier.height(46.dp)
+                            modifier = Modifier
+                                .height(44.dp)
+                                .padding(start = 12.dp),
+                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
                         ) {
-                            Text("Geri", color = AdaptWhite, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = if (currentSlide == slides.lastIndex) "Hadi Başlayalım" else "İleri",
+                                color = Color.Black,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
-                    } else {
-                        Spacer(modifier = Modifier.width(70.dp))
-                    }
-
-                    // Next / Start button
-                    Button(
-                        onClick = {
-                            if (currentSlide < slides.lastIndex) {
-                                currentSlide++
-                            } else {
-                                onTutorialCompleted()
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = slide.accentColor
-                        ),
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier
-                            .height(46.dp)
-                            .padding(start = 12.dp),
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
-                    ) {
-                        Text(
-                            text = if (currentSlide == slides.lastIndex) "Hadi Başlayalım" else "İleri",
-                            color = Color.Black,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold
-                        )
                     }
                 }
             }
